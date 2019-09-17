@@ -31,3 +31,5 @@ print(numpy.matrix(maze))
 #     print("\n")
 #     for j in range(dim):
 #         print("{} ,".format(maze[i,j]))
+
+#test for github
