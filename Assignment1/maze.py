@@ -8,26 +8,33 @@ dim = 10
 
 p = 0.3
 
-def probability(p):
-    """ given an event of probability p, return whether the event comes true"""
-    return (random.random()<p)
+class Maze:
+    def __init__(self, dim, p):
+        self.dim = dim
+        self.p = p
+        self.maze = None
+        self.generate_maze()
 
+    def probability(self, p):
+        """ given an event of probability p, return whether the event comes true"""
+        return (random.random()<p)
 
+    def generate_maze(self):
+        self.maze = numpy.zeros((self.dim, self.dim))
 
+        for i in range(self.dim):
+            for j in range(self.dim):
+                if self.probability(p):
+                    self.maze[i, j] = 1
+        self.maze[0,0]=0
+        self.maze[self.dim-1, self.dim-1]=0
 
-def generate_maze():
-    maze = numpy.zeros((dim, dim))
+    def print_maze(self):
+        if self.maze is not None:
+            print(numpy.matrix(self.maze))
+        else:
+            print("You must generate the maze first")
 
-    for i in range(dim):
-        for j in range(dim):
-            if probability(p):
-                maze[i, j] = 1
-    maze[0,0]=0
-    maze[1,1]=0
-    return maze
-maze=generate_maze()
-print(numpy.matrix(maze))
-# for i in range(dim):
-#     print("\n")
-#     for j in range(dim):
-#         print("{} ,".format(maze[i,j]))
+if __name__ == "__main__":
+    maze = Maze(dim, p)
+    maze.print_maze()
