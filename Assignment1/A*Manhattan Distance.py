@@ -4,6 +4,8 @@ import math
 import heapq
 
 
+PATH=100
+
 def generate_ManhattanDistance(maze):
     '''
     set heuristic "h"
@@ -28,7 +30,7 @@ def neighbour(node, maze):
     return a list of tuple with (coorY,coorX)
     which was not filled(obstacle)
     and is the neighbour of the curent one
-    :param node:
+    :param node（coor_y,coor_x）:
     :param maze:
     :return:
     '''
@@ -113,9 +115,9 @@ def trace_back(maze):
         print("no path found")
         return
     while current != (0, 0):
-        maze[current[0]][current[1]] = 100
+        maze[current[0]][current[1]] = PATH
         current = path[current]
-    maze[0][0] = 100
+    maze[0][0] = PATH
     print(numpy.matrix(maze))
 
 

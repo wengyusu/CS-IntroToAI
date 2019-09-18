@@ -3,6 +3,8 @@ import numpy
 import math
 import heapq
 
+PATH=100
+
 def generate_EuclideanDistance(maze):
     '''
     set heuristic "h"
@@ -113,9 +115,9 @@ def trace_back(maze):
         print("no path found")
         return
     while current!=(0,0):
-        maze[current[0]][current[1]]=100
+        maze[current[0]][current[1]]=PATH
         current=path[current]
-    maze[0][0]=100
+    maze[0][0]=PATH
     print(numpy.matrix(maze))
 
         
