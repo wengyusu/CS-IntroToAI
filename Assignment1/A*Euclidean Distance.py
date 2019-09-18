@@ -125,7 +125,8 @@ if __name__=="__main__":
     #distanceE=generate_EuclideanDistance(maze)
     print(numpy.matrix(maze))
     # print(numpy.matrix(distanceE))
-    trace_back(maze)
+    trace_back(maze)#test
+
 
 
     
