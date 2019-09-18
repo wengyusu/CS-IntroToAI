@@ -38,3 +38,4 @@ class Maze:
 if __name__ == "__main__":
     maze = Maze(dim, p)
     maze.print_maze()
+    help(maze)

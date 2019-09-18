@@ -98,10 +98,14 @@ def trace_back(maze):
     max_coorY = sizeY - 1
     max_coorX = sizeX - 1
     current=(max_coorY,max_coorX)
+    if current not in path:
+        print("no path found")
+        return
     while current!=(0,0):
         maze[current[0]][current[1]]=100
         current=path[current]
     maze[0][0]=100
+    print(numpy.matrix(maze))
 
         
     
@@ -115,12 +119,14 @@ def trace_back(maze):
 
 
 if __name__=="__main__":
-    maze=maze.generate_maze()
+    maze_object = maze.Maze(dim=10, p=0.3)
+    maze=maze_object.maze
+    # maze=maze.generate_maze()
     #distanceE=generate_EuclideanDistance(maze)
     print(numpy.matrix(maze))
     # print(numpy.matrix(distanceE))
     trace_back(maze)
-    print(numpy.matrix(maze))
+
 
     
 
