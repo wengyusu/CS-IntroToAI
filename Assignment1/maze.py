@@ -25,9 +25,9 @@ class Maze:
         for i in range(self.dim):
             for j in range(self.dim):
                 if self.probability(p):
-                    self.maze[i, j] = 1
-        self.maze[0,0]=0
-        self.maze[self.dim-1, self.dim-1]=0
+                    self.maze[i, j] = FILLED
+        self.maze[0,0] = EMPTY
+        self.maze[self.dim-1, self.dim-1] = EMPTY
 
     def print_maze(self):
         if self.maze is not None:
