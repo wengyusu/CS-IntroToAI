@@ -29,6 +29,7 @@ def neighbour(node,maze):
     '''
     return a list of tuple with (coorY,coorX)
     which was not filled(obstacle)
+    and is the neighbour of the curent one
     :param node:
     :param maze:
     :return:
@@ -68,6 +69,11 @@ def neighbour(node,maze):
 
 
 def generate_path(maze):
+    '''
+    using 2d list track the previous node
+    :param maze:
+    :return:
+    '''
     sizeY = len(maze)
     sizeX = len(maze[0])
     max_coorY = sizeY - 1
@@ -92,6 +98,11 @@ def generate_path(maze):
                 path[(coor_y,coor_x)]=(node[0],node[1])
     return path
 def trace_back(maze):
+    '''
+    print the path when existed
+    :param maze:
+    :return:
+    '''
     path=generate_path(maze)
     sizeY = len(maze)
     sizeX = len(maze[0])
