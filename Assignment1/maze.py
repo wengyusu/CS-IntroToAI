@@ -23,13 +23,15 @@ def generate_maze():
             if probability(p):
                 maze[i, j] = 1
     maze[0,0]=0
-    maze[1,1]=0
+    maze[9,9]=0
     return maze
-maze=generate_maze()
-print(numpy.matrix(maze))
-# for i in range(dim):
-#     print("\n")
-#     for j in range(dim):
-#         print("{} ,".format(maze[i,j]))
 
-#test for github
+if __name__=="__main__":
+    maze=generate_maze()
+    print(numpy.matrix(maze))
+    # for i in range(dim):
+    #     print("\n")
+    #     for j in range(dim):
+    #         print("{} ,".format(maze[i,j]))
+
+    #test for github
