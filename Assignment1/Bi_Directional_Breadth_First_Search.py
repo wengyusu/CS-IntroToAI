@@ -107,7 +107,7 @@ def trace_back(maze):
     '''
     if find_path(maze)==None:
         print("no path found")
-        return
+        return False
     else:
         node,start_path,end_path = find_path(maze)
         sizeY = len(maze)
@@ -126,16 +126,29 @@ def trace_back(maze):
             current = end_path[current]
         maze[max_coorY][max_coorX]=PATH
         print ("the center node is {}".format(node))
-        print(numpy.matrix(maze))
+        return True
 
+
+
+
+def calculate_path (maze):
+
+    path_length=numpy.sum(maze==PATH)
+    print("total path length is {}".format(path_length))
+def print_path(maze):
+    print(numpy.matrix(maze))
+    trace_back(maze)
+    print(numpy.matrix(maze))
+    calculate_path(maze)
 
 
 
 if __name__ == "__main__":
-    maze_object = maze.Maze(dim=10, p=0.3)
+    maze_object = maze.Maze(dim=100, p=0.3)
     maze = maze_object.maze
-    # maze=maze.generate_maze()
-    # distanceE=generate_EuclideanDistance(maze)
-    print(numpy.matrix(maze))
-    # print(numpy.matrix(distanceE))
-    trace_back(maze)  # test
+    # # maze=maze.generate_maze()
+    # # distanceE=generate_EuclideanDistance(maze)
+    # print(numpy.matrix(maze))
+    # # print(numpy.matrix(distanceE))
+    # trace_back(maze)  # test
+    print_path(maze)

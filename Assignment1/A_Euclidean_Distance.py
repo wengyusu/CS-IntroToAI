@@ -90,7 +90,7 @@ def generate_path(maze):
     while len(pq)!=0:
         node=heapq.heappop(pq)[1]
         if node==(max_coorX,max_coorY):
-            print("find path")
+            print("find path:")
             break
         for (coor_y,coor_x) in neighbour(node,maze):
             if not visited[coor_y][coor_x]:
@@ -113,17 +113,27 @@ def trace_back(maze):
     current=(max_coorY,max_coorX)
     if current not in path:
         print("no path found")
-        return
+        return False
     while current!=(0,0):
         maze[current[0]][current[1]]=PATH
         current=path[current]
     maze[0][0]=PATH
+
+
+    return True
+
+def calculate_path (maze):
+
+    path_length=numpy.sum(maze==PATH)
+    print("total path length is {}".format(path_length))
+    
+    
+
+def print_path(maze):
     print(numpy.matrix(maze))
-
-        
-    
-    
-
+    trace_back(maze)
+    print(numpy.matrix(maze))
+    calculate_path(maze)
 
 
 
@@ -132,13 +142,16 @@ def trace_back(maze):
 
 
 if __name__=="__main__":
-    maze_object = maze.Maze(dim=10, p=0.3)
+    maze_object = maze.Maze(dim=10, p=0.2)
     maze=maze_object.maze
     # maze=maze.generate_maze()
     #distanceE=generate_EuclideanDistance(maze)
-    print(numpy.matrix(maze))
-    # print(numpy.matrix(distanceE))
-    trace_back(maze)#test
+    # print(numpy.matrix(maze))
+    #     # # print(numpy.matrix(distanceE))
+    #     # trace_back(maze)#test
+    #     # calculate_path(maze)
+    print_path(maze)
+
 
 
 
