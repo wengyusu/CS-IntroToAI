@@ -38,3 +38,4 @@ if __name__ == "__main__":
     p = 0.3
     maze = Maze(dim, p)
     maze.print_maze()
+    help(maze)
