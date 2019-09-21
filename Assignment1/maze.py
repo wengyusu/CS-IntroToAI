@@ -4,9 +4,7 @@ import random
 EMPTY = 0
 FILLED = 1
 
-dim = 10
 
-p = 0.3
 
 class Maze:
     def __init__(self, dim, p):
@@ -24,7 +22,7 @@ class Maze:
 
         for i in range(self.dim):
             for j in range(self.dim):
-                if self.probability(p):
+                if self.probability(self.p):
                     self.maze[i, j] = FILLED
         self.maze[0,0] = EMPTY
         self.maze[self.dim-1, self.dim-1] = EMPTY
@@ -36,5 +34,7 @@ class Maze:
             print("You must generate the maze first")
 
 if __name__ == "__main__":
+    dim = 10
+    p = 0.3
     maze = Maze(dim, p)
     maze.print_maze()
