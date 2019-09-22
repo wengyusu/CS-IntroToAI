@@ -116,9 +116,7 @@ class Astar_Euclidean(object):
             current=path[current]
         maze[0][0]=PATH
         print(numpy.matrix(maze))
-
-
-    return True
+        return True
 
     def calculate_path (self, maze):
         '''
