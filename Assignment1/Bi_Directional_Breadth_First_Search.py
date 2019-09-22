@@ -81,7 +81,9 @@ def find_path(maze):
                 start_path[each_node]=current_start
                 if each_node in visited_end:
                     # print(end_path)
+                    print("total visited node is {}".format(len(visited_start)+len(visited_end)))
                     return [each_node,start_path,end_path]
+
 
         # end second check
         current_end=q_end.get()
@@ -92,6 +94,7 @@ def find_path(maze):
                 end_path[each_node] = current_end
                 if each_node in visited_start:
                     # print(end_path)
+                    print("total visited node is {}".format(len(visited_start) + len(visited_end)))
                     return [each_node,start_path,end_path]
 
 
@@ -132,6 +135,11 @@ def trace_back(maze):
 
 
 def calculate_path (maze):
+    '''
+
+    :param maze: a maze which is path found maze, which mean 0 represent empty 1 represent filled 100 represent path
+    :return:  total path
+    '''
 
     path_length=numpy.sum(maze==PATH)
     print("total path length is {}".format(path_length))
@@ -152,3 +160,4 @@ if __name__ == "__main__":
     # # print(numpy.matrix(distanceE))
     # trace_back(maze)  # test
     print_path(maze)
+
