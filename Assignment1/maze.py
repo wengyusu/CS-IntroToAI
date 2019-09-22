@@ -4,13 +4,6 @@ import random
 EMPTY = 0
 FILLED = 1
 
-
-<<<<<<< HEAD
-=======
-
-
->>>>>>> f785d6e47231003e9316ec0cfd1ce413f661eeba
-
 class Maze:
     def __init__(self, dim, p):
         self.dim = dim
