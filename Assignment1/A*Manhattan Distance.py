@@ -3,54 +3,52 @@ import numpy
 import math
 import heapq
 
+
 PATH=100
 
-def generate_EuclideanDistance(maze):
+def generate_ManhattanDistance(maze):
     '''
     set heuristic "h"
     suppose coorX is len(maze)
     suppose coorY is len(maze[0])
     maze[y][x]
     '''
-    sizeY=len(maze)
-    sizeX=len(maze[0])
-    max_coorY=sizeY-1
-    max_coorX=sizeX-1
-    distance_Euclidean=[[0] * sizeX for i in range(sizeY)]
+    sizeY = len(maze)
+    sizeX = len(maze[0])
+    max_coorY = sizeY - 1
+    max_coorX = sizeX - 1
+    distance_Manhattan = [[0] * sizeX for i in range(sizeY)]
     for x in range(sizeX):
         for y in range(sizeY):
-            distance_Euclidean[x][y]=math.sqrt(((max_coorX-x)**2+(max_coorY-y)**2))
-    distance_Euclidean[0][0]=0
-    return distance_Euclidean
+            distance_Manhattan[x][y] = numpy.abs(max_coorX - x) +numpy.abs (max_coorY - y)
+    distance_Manhattan[0][0] = 0
+    return distance_Manhattan
 
 
-
-
-
-def neighbour(node,maze):
+def neighbour(node, maze):
     '''
     return a list of tuple with (coorY,coorX)
     which was not filled(obstacle)
     and is the neighbour of the curent one
-    :param node:
+    :param node（coor_y,coor_x）:
     :param maze:
     :return:
     '''
-    neighbour_node=[]
-    coor_x=node[1]
-    coor_y=node[0]
-    sizeY=len(maze)
-    sizeX=len(maze[0])
-    max_coorY=sizeY-1
-    max_coorX=sizeX-1
+    neighbour_node = []
+    coor_x = node[1]
+    coor_y = node[0]
+    sizeY = len(maze)
+    sizeX = len(maze[0])
+    max_coorY = sizeY - 1
+    max_coorX = sizeX - 1
 
-    if coor_x>0:
+    if coor_x > 0:
         x_minus_one = coor_x - 1
         letf_one = (coor_y, x_minus_one)
         if (maze[coor_y][x_minus_one]) == 0:
             neighbour_node.append(letf_one)
 
-    if coor_x<max_coorX:
+    if coor_x < max_coorX:
         x_plus_one = coor_x + 1
         right_one = (coor_y, x_plus_one)
         if (maze[coor_y][x_plus_one]) == 0:
@@ -80,69 +78,61 @@ def generate_path(maze):
     sizeX = len(maze[0])
     max_coorY = sizeY - 1
     max_coorX = sizeX - 1
-    distanceE = generate_EuclideanDistance(maze)
-    pq=[]
-    path={}
-    visited=[[False]*sizeX for i in range(sizeY)]
-    costed= [[0] * sizeX for i in range(sizeY)]
-    heapq.heappush(pq,(0,(0,0)))
-    visited[0][0]=True
-    while len(pq)!=0:
-        node=heapq.heappop(pq)[1]
-        if node==(max_coorX,max_coorY):
+    distanceE = generate_ManhattanDistance(maze)
+    pq = []
+    path = {}
+    visited = [[False] * sizeX for i in range(sizeY)]
+    costed = [[0] * sizeX for i in range(sizeY)]
+    heapq.heappush(pq, (0, (0, 0)))
+    visited[0][0] = True
+    while len(pq) != 0:
+        node = heapq.heappop(pq)[1]
+        if node == (max_coorX, max_coorY):
             print("find path")
             break
-        for (coor_y,coor_x) in neighbour(node,maze):
+        for (coor_y, coor_x) in neighbour(node, maze):
             if not visited[coor_y][coor_x]:
-                costed[coor_y][coor_x]=costed[node[0]][node[1]]+1
-                visited[coor_y][coor_x]=True
-                heapq.heappush(pq,(visited[coor_y][coor_x]+distanceE[coor_y][coor_x],(coor_y,coor_x)))
-                path[(coor_y,coor_x)]=(node[0],node[1])
+                costed[coor_y][coor_x] = costed[node[0]][node[1]] + 1
+                visited[coor_y][coor_x] = True
+                heapq.heappush(pq, (visited[coor_y][coor_x] + distanceE[coor_y][coor_x], (coor_y, coor_x)))
+                path[(coor_y, coor_x)] = (node[0], node[1])
     return path
+
+
 def trace_back(maze):
     '''
     print the path when existed
     :param maze:
     :return:
     '''
-    path=generate_path(maze)
+    path = generate_path(maze)
     sizeY = len(maze)
     sizeX = len(maze[0])
     max_coorY = sizeY - 1
     max_coorX = sizeX - 1
-    current=(max_coorY,max_coorX)
+    current = (max_coorY, max_coorX)
     if current not in path:
         print("no path found")
         return
-    while current!=(0,0):
-        maze[current[0]][current[1]]=PATH
-        current=path[current]
-    maze[0][0]=PATH
+    while current != (0, 0):
+        maze[current[0]][current[1]] = PATH
+        current = path[current]
+    maze[0][0] = PATH
     print(numpy.matrix(maze))
 
-        
-    
-    
 
-
-
-
-
-
-
-
-if __name__=="__main__":
+if __name__ == "__main__":
     maze_object = maze.Maze(dim=10, p=0.3)
-    maze=maze_object.maze
+    maze = maze_object.maze
     # maze=maze.generate_maze()
-    #distanceE=generate_EuclideanDistance(maze)
+    # distanceE=generate_EuclideanDistance(maze)
     print(numpy.matrix(maze))
     # print(numpy.matrix(distanceE))
-    trace_back(maze)#test
+    trace_back(maze)  # test
 
 
 
-    
+
 
 
 
