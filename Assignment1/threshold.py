@@ -1,7 +1,7 @@
 import DFS
 import maze
 
-p_list = range(1, 10)
+p_list = range(1, 20)
 dim = 512
 
 for p in p_list:
