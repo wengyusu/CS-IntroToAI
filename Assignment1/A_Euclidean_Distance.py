@@ -117,10 +117,30 @@ class Astar_Euclidean(object):
         maze[0][0]=PATH
         print(numpy.matrix(maze))
 
-        
-    
-    
 
+    return True
+
+    def calculate_path (self, maze):
+        '''
+        :param maze: a maze which is path found maze, which mean 0 represent empty 1 represent filled 100 represent path
+        :return:  total path
+
+        '''
+        path_length=numpy.sum(maze==PATH)
+        print("total path length is {}".format(path_length))
+        
+        
+
+    def print_path(self, maze):
+        '''
+
+        :param maze:  a maze generated randomly
+        :return: print original maze and path-found maze(100 represent "Path")
+        '''
+        print(numpy.matrix(maze))
+        self.trace_back(maze)
+        print(numpy.matrix(maze))
+        self.calculate_path(maze)
 
 
 
@@ -129,14 +149,12 @@ class Astar_Euclidean(object):
 
 
 if __name__=="__main__":
-    maze_object = maze.Maze(dim=10, p=0.3)
-    maze=maze_object.maze
-    # maze=maze.generate_maze()
-    #distanceE=generate_EuclideanDistance(maze)
+    maze_object = maze.Maze(dim=10, p=0.2)
+    maze=maze_object.maze # generate a maze
     search = Astar_Euclidean()
-    print(numpy.matrix(maze))
-    # print(numpy.matrix(distanceE))
-    search.trace_back(maze)#test
+    search.print_path(maze) #print original maze and path-found maze(100 represent "Path")
+
+
 
 
 
