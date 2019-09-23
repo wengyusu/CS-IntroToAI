@@ -40,4 +40,4 @@ class Maze:
 if __name__ == "__main__":
     maze = Maze(11, 0.2)
     maze.print_maze()
-    # help(maze)
+    print (type(maze.maze))
