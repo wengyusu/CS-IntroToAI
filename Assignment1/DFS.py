@@ -5,7 +5,7 @@ import time
 EMPTY = 0
 FILLED = 1
 
-dfs_maze = maze.Maze(dim = 512, p = 0.2)
+dfs_maze = maze.Maze(dim = 10, p = 0.2)
 
 class Stack(object):
     def __init__(self):
@@ -28,22 +28,24 @@ class Stack(object):
 
 def neighbors(x, y, dim): # given x,y,dim,return the list of its neighbors
     result = []
+    if x < dim-1:
+        result.append((x+1, y))
+
+    if y < dim-1:
+        result.append((x, y+1))
+        
     if x > 0:
         result.append((x-1, y))
 
     if y > 0:
         result.append((x, y-1))
 
-    if x < dim-1:
-        result.append((x+1, y))
 
-    if y < dim-1:
-        result.append((x, y+1))
 
     return result
 
 def dfs(dfs_maze: maze.Maze):
-    # dfs_maze.print_maze()
+    dfs_maze.print_maze()
     stack = Stack()
     stack.push((0,0))
     visited = numpy.zeros((dfs_maze.dim, dfs_maze.dim)) # create a matrix to mark whether the cell was visited
@@ -54,7 +56,7 @@ def dfs(dfs_maze: maze.Maze):
         # print(cell)
         if cell == (dfs_maze.dim-1, dfs_maze.dim-1):
             # print("Find a path")
-            # print(stack.stack)
+            print(stack.stack)
             return True
         for neighbor in neighbors(cell[0], cell[1], dfs_maze.dim):
             if visited[neighbor[0], neighbor[1]] != 1 and dfs_maze.maze[neighbor[0], neighbor[1]] == EMPTY:
