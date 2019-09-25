@@ -38,6 +38,7 @@ class Maze:
             print("You must generate the maze first")
 
 if __name__ == "__main__":
-    maze = Maze(11, 0.2)
+    maze = Maze(11, 0.5)
     maze.print_maze()
-    print (type(maze.maze))
+    print(maze.maze[4][3])
+    # print(maze.maze[3,4])

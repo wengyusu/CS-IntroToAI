@@ -131,6 +131,9 @@ def calculate_path (maze):
     '''
     path_length=numpy.sum(maze==PATH)
     print("total path length is {}".format(path_length))
+
+
+
     
     
 
@@ -152,7 +155,7 @@ def print_path(maze):
 
 
 if __name__=="__main__":
-    maze_object = maze.Maze(dim=2, p=0.2)
+    maze_object = maze.Maze(dim=10, p=0.2)
     maze=maze_object.maze # generate a maze
     print_path(maze) #print original maze and path-found maze(100 represent "Path")
 
