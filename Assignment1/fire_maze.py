@@ -149,15 +149,15 @@ class A_star(object):
         self.calculate_path()
  
 class Dijkstra(object):
-    def __init__(self, maze: maze.Maze):
+    def __init__(self, maze: maze.Maze, start):
         self.maze = maze
         self.frontier = PriorityQueue()
         self.visited = {}
         self.cost = numpy.zeros((self.maze.dim, self.maze.dim))
-        start = (0, self.maze.dim-1)
-        self.frontier.put((0, start))
+        self.start = start
+        self.frontier.put((0, self.start))
         self.visited[start] = None
-        self.cost[start] = 0
+        self.cost[self.start] = 0
 
     def neighbors(self, x, y): # given x,y,return the list of its neighbors
         result = []
@@ -191,9 +191,51 @@ class Dijkstra(object):
                     # print(cell)
                     self.visited[cell] = current
 
-        self.cost[0, self.maze.dim-1] = 0
+        self.cost[self.start] = 0
         # print(numpy.matrix(self.cost))
         return numpy.matrix(self.cost)
+
+class BFS_Improved(BFS.BFS):
+    def __init__(self, maze):
+        super().__init__(maze)
+        self.dis_from_fire = Dijkstra(self.maze, (0,self.maze.dim - 1)).cal_cost()
+        self.cost = Dijkstra(self.maze, (0,0)).cal_cost()
+
+    def search(self): 
+        # self.maze.print_maze()
+        start = (0,0)
+        self.queue.put(BFS.Cell(start))
+        visited = numpy.zeros((self.maze.dim, self.maze.dim)) # create a matrix to mark whether the cell was visited
+        visited[0, 0] = 1
+        while self.queue.empty() is False:
+            cell = self.queue.get()
+            # print(cell.position)
+            if cell.position == (self.maze.dim-1, self.maze.dim-1):
+                # print("Find a solution")
+                pre_cell = cell.pre
+                self.path.append((self.maze.dim-1, self.maze.dim-1))
+                while pre_cell is not None:
+                    # print(pre_cell.position)
+                    self.path.append(pre_cell.position)
+                    pre_cell = pre_cell.pre
+
+                # self.path = self.path[::-1]
+                # print(self.path)
+                    # print(node)
+                return True
+
+            for neighbor in self.neighbors(cell.position[0], cell.position[1], self.maze.dim):
+                # new_cost = self.cost[cell.position] + 1
+                # # print(new_cost)
+                # if self.cost[neighbor] == 0 or new_cost < self.cost[neighbor]:
+                #     self.cost[neighbor] = new_cost
+                if visited[neighbor[0], neighbor[1]] != 1 and self.maze.maze[neighbor[0], neighbor[1]] == EMPTY and self.cost[neighbor] < self.dis_from_fire[neighbor]:
+                    visited[neighbor[0], neighbor[1]] = 1
+                    next_cell = BFS.Cell(position = neighbor, pre = cell)
+                    self.queue.put(next_cell)
+                    # break
+        return False
+
 
 class Astar_Improved(object):
     def __init__(self, maze):
@@ -201,16 +243,18 @@ class Astar_Improved(object):
         self.frontier = PriorityQueue()
         self.visited = {}
         self.cost = numpy.zeros((self.maze.dim, self.maze.dim))
-        self.dis_from_fire = Dijkstra(self.maze).cal_cost()
+        # self.cost = Dijkstra(self.maze, (0,0)).cal_cost()
+        self.dis_from_fire = Dijkstra(self.maze, (0, self.maze.dim - 1)).cal_cost()
         start = (0, 0)
+        self.cost[start] = 0
         self.frontier.put((0, start))
         self.visited[start] = None
-        self.cost[start] = 0
+        # self.cost[start] = 0
         self.path = None
         self.path_length = None
         # if self.dis_from_fire[0, 0] != 0:
         self.dis = numpy.zeros((self.maze.dim, self.maze.dim))
-        self.dis[0,0] = (0 - self.dis_from_fire[0,0])/(2*self.maze.dim - 1)
+        self.dis[0,0] = (self.maze.dim * self.maze.dim - self.dis_from_fire[0,0])/(2*self.maze.dim - 1)
 
     def neighbors(self, x, y): # given x,y,return the list of its neighbors
         result = []
@@ -228,20 +272,17 @@ class Astar_Improved(object):
 
         return result
 
-    def heuristic(self, goal, current):
-        """
-        using Manhattan Distance
-        """
-        # print(current)
-        delta = self.cost[current[0], current[1]]-self.dis_from_fire[current[0], current[1]]
-        return abs(goal[0] - current[0]) + abs(goal[1] - current[1])
-        # return self.dis_from_fire[goal] - self.dis_from_fire[current[0], current[1]]
-        # return (numpy.abs(goal[0] - current[0]) + numpy.abs (goal[1] - current[1])) + (1 / self.dis_from_fire[current[0], current[1]])
-
     def search(self):
+        # t = BFS_Improved(self.maze)
+        # t.search()
+        # if t.path or t.path != []:
+        #     self.path = t.path
+        #     self.path_length = len(self.path)
+        #     return
         # self.maze.print_maze()
         while not self.frontier.empty():
             current = self.frontier.get()[1]
+            # print(current)
             if current == (self.maze.dim-1, self.maze.dim-1):
                 self.path = []
                 while current != (0,0):
@@ -254,25 +295,22 @@ class Astar_Improved(object):
                 break
             for cell in self.neighbors(current[0], current[1]):
                 if self.maze.maze[cell[0], cell[1]] == EMPTY and cell != (0,0):
-                    # print(current) 
-                    # if delta >= 0: # the cell may be on fire
-                    # coefficent = (delta+ self.maze.dim - 1)/(2*self.maze.dim-1)
-                    # else:
-                        # coefficent = 0
-                    # print(coefficent)
-                   
-                    new_cost = self.cost[current[0], current[1]] + 1
+                    new_cost = self.cost[current] + 1
                     # if new_cost - self.dis_from_fire[cell[0], cell[1]] <= 0:
                     #     delta = self.dis[current]
                     # else:
                     delta = new_cost - self.dis_from_fire[cell[0], cell[1]]
+                    new_dis = self.dis[current] + (self.maze.dim * self.maze.dim + delta) / (2*self.maze.dim - 1)
+                    # delta = self.cost[cell] - self.dis_from_fire[cell[0], cell[1]]
                     # print(self.dis_from_fire[current[0], current[1]])
-                    if self.cost[cell] == 0 or new_cost < self.cost[cell]:
-                        self.dis[cell] = delta / (2*self.maze.dim -1 )
+                    if self.cost[cell] == 0 or new_dis < self.dis[cell]:
                         self.cost[cell] = new_cost
                         # priority = new_cost + self.heuristic((self.maze.dim-1,self.maze.dim-1), cell)
-                        priority = new_cost + delta / (2*self.maze.dim -1 )
-                        # print(priority)
+                        # if delta < 0:
+                        #     priority = -1
+                        # else: 
+                            # priority = new_cost + delta / (2*self.maze.dim -1 )
+                        priority = delta
                         self.frontier.put((priority, cell))
                         self.visited[cell] = current
         # print(numpy.matrix(self.cost))  
@@ -286,11 +324,12 @@ class Fire_maze(maze.Maze):
         super().__init__(dim, p)
         self.q = q
         self.maze[0, dim-1] = FIRE
-        self.fire_list = [] # record cells which are on fire
-        self.fire_list.append((0, dim-1))
+        self.fire_list = set() # record cells which are on fire
+        self.fire_list.add((0, dim-1))
 
     def neighbors(self, x, y): # given x,y,return the list of its neighbors
         result = []
+
         if x > 0:
             result.append((x-1, y))
 
@@ -324,50 +363,55 @@ class Fire_maze(maze.Maze):
                 if fire_num > 0 and self.probability(1-p):
                     confirm_list.add((x, y))
         
-        self.fire_list = []
+        # self.fire_list = []
         # print(confirm_list)/
         for i in confirm_list:
-            self.fire_list.append(i)
+            self.fire_list.add(i)
             self.maze[i[0], i[1]] = FIRE
 
 
-def test_rate(p,q):
-    f_maze = Fire_maze(64, p, q)
+def test_rate(f_maze):
+    # f_maze = Fire_maze(64, p, q)
     # f_maze.print_maze()
-    search = A_star(f_maze.maze)
-    search.print_path()
-    # print(search.path)
-    path = search.path
-    if search.path_length:
-        for t in range(search.path_length):
+    search = BFS.BFS(f_maze)
+    search.search()
+
+    path = search.path[::-1]
+    if search.path:
+        # print(len(path))
+        find = False
+        for t in range(len(path)):
             # print(t)
             f_maze.fire_spread()
             if not path:
                 break
             next_cell = path.pop()
             for p in path:
-                if f_maze.maze[p[0], p[1]] == FIRE:
+                if f_maze.maze[p[0], p[1]] == FIRE: # Find the path is unavaliable
+                    find = True
                     break
             else:
                 continue
             # print("The path is unavailable due to the fire")
-            return -1
-            # print(numpy.matrix(f_maze.maze))
-            # break
+            if find:
+                return -1
         # print(numpy.matrix(f_maze.maze))
         return 1
     else:
-        return 0
+        return 0 # the maze doesn't have a path
 
-def test_improved_rate(p,q):
-    f_maze = Fire_maze(64, p, q)
+def test_improved_rate(f_maze):
+    # f_maze = Fire_maze(64, p, q)
     # f_maze.print_maze()
+    test = BFS.BFS(f_maze)
+    test.search()
     search = Astar_Improved(f_maze)
     search.search()
     # search.print_path()
     # print(search.path)
     path = search.path
     if search.path:
+        find = False
         for t in range(search.path_length):
             # print(t)
             f_maze.fire_spread()
@@ -376,55 +420,84 @@ def test_improved_rate(p,q):
             next_cell = path.pop()
             for p in path:
                 if f_maze.maze[p[0], p[1]] == FIRE:
+                    find = True
                     break
             else:
                 continue
             # print("The path is unavailable due to the fire")
-            return -1
+            if find:
+                return -1
             # print(numpy.matrix(f_maze.maze))
             # break
         # print(numpy.matrix(f_maze.maze))
         return 1
     else:
+        if test.path:
+            return -1
         return 0
 
 def main(p):
-    search = Astar_Improved(Fire_maze(10, 0.2, 1))
-    search.search()
-    # search.test()
-    # dikj = Dijkstra(maze.Maze(10, 0.2))
-    # dikj.cal_cost()
-    for q in range(4,11):
-        q = q/10
-        Postive = 0
-        Negative = 0
-        for i in range(1000):
-            res = test_improved_rate(p,q)
-            if  res == 1:
-                Postive = Postive + 1
-            elif res == -1:
-                Negative = Negative + 1
-            else:
-                pass
-        rate = Postive/(Postive + Negative)
-        print("success rate when q = {} is : {}".format(q, rate))
-        # print("total num:{}".format((Postive+Negative)))
+    print("Show a sample:")
+    test_maze = Fire_maze(10, 0.2, 0.5)
+    test = Astar_Improved(test_maze)
+    test.search()
+    find = False
+    if test.path:
+        print(numpy.matrix(test.maze.maze))
+        print(test.path)
+        for t in range(test.path_length):
+            test_maze.fire_spread()
+            next_cell = test.path.pop()
+            test_maze.maze[next_cell] = PATH
+            for cell in test.path:
+                if test_maze.maze[cell] == FIRE:
+                    find = True
+                    break
+        if find:
+            print("The path is unavailable due to the fire")
+        print(numpy.matrix(test_maze.maze))
 
-    for q in range(4,11):
+    for q in range(11):
         q = q/10
-        Postive = 0
-        Negative = 0
+        Postive0 = 0
+        Negative0 = 0
+        Postive1 = 0
+        Negative1 = 0
         for i in range(1000):
-            res = test_rate(p,q)
-            if  res == 1:
-                Postive = Postive + 1
-            elif res == -1:
-                Negative = Negative + 1
+            f_maze = Fire_maze(32, p, q)
+            res0 = test_improved_rate(f_maze)
+            if  res0 == 1:
+                Postive0 = Postive0 + 1
+            elif res0 == -1:
+                Negative0 = Negative0 + 1
             else:
                 pass
-        rate = Postive/(Postive + Negative)
-        print("success rate when q = {} is : {}".format(q, rate))
-        
+            res1 = test_rate(f_maze)
+            if  res1 == 1:
+                Postive1 = Postive1 + 1
+            elif res1 == -1:
+                Negative1 = Negative1 + 1
+            else:
+                pass
+        rate0 = Postive0/(Postive0 + Negative0)
+        rate1 = Postive1/(Postive1 + Negative1)
+        print("success rate of traditional way when q = {} is : {}".format(q, rate1))
+        print("success rate of improved way when q = {} is : {}".format(q, rate0))
+    # print("Test traditional algorithm:")
+    # for q in range(4,11):
+    #     q = q/10
+    #     Postive = 0
+    #     Negative = 0
+    #     for i in range(1000):
+    #         res = test_rate(p,q)
+    #         if  res == 1:
+    #             Postive = Postive + 1
+    #         elif res == -1:
+    #             Negative = Negative + 1
+    #         else:
+    #             pass
+    #     rate = Postive/(Postive + Negative)
+    #     print("success rate when q = {} is : {}".format(q, rate))
 
 if __name__ == "__main__":
     main(0.2)
