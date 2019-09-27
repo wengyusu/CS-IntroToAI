@@ -4,10 +4,6 @@ import random
 EMPTY = 0
 FILLED = 1
 
-
-
-
-
 class Maze:
     def __init__(self, dim, p):
         self.dim = dim
@@ -15,18 +11,16 @@ class Maze:
         self.maze = None
         self.generate_maze()
 
-    def probability(self):
+    def probability(self, p):
         """ given an event of probability p, return whether the event comes true"""
-        return (random.random()<self.p)
+        return (random.random()<p)
 
     def generate_maze(self):
         self.maze = numpy.zeros((self.dim, self.dim))
 
         for i in range(self.dim):
             for j in range(self.dim):
-                if self.probability():
-
-
+                if self.probability(self.p):
                     self.maze[i, j] = FILLED
         self.maze[0,0] = EMPTY
         self.maze[self.dim-1, self.dim-1] = EMPTY
@@ -40,5 +34,4 @@ class Maze:
 if __name__ == "__main__":
     maze = Maze(11, 0.5)
     maze.print_maze()
-    print(maze.maze[4][3])
-    # print(maze.maze[3,4])
+    # help(maze)

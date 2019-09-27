@@ -1,41 +1,23 @@
 import maze
 import numpy
-import time
+from queue import Queue
 
 EMPTY = 0
 FILLED = 1
+
 
 
 class Cell(object):
     def __init__(self, position, pre = None):
         self.position = position
         self.pre = pre
+        
 
-class Stack(object):
-    def __init__(self):
-        self.stack = []
+class BFS(object):
 
-    def push(self, value):
-        self.stack.append(value)
-
-    def pop(self):
-        if self.stack:
-            self.stack.pop()
-        else:
-            raise LookupError('stack is empty!')
-
-    def is_empty(self): 
-        return not bool(self.stack)
-
-    def top(self):
-        return self.stack[-1]
-
-
-class DFS(object):
-
-    def __init__(self, maze):
+    def __init__(self, maze:maze.Maze):
         self.maze = maze
-        self.stack = Stack()
+        self.queue = Queue()
         self.path = []
 
     def neighbors(self, x, y, dim): # given x,y,dim,return the list of its neighbors
@@ -52,23 +34,19 @@ class DFS(object):
         if y > 0:
             result.append((x, y-1))
 
-            
         return result
 
     def search(self):
-        # dfs_maze.print_maze()
-        self.stack.push(Cell((0,0)))
+        # bfs_maze.print_maze()
+        start = (0,0)
+        self.queue.put(Cell(start))
         visited = numpy.zeros((self.maze.dim, self.maze.dim)) # create a matrix to mark whether the cell was visited
-        visited[0,0] = 1
-        while self.stack.is_empty() is False:
-            cell = self.stack.top()
-            self.stack.pop()
+        visited[0, 0] = 1
+        while self.queue.empty() is False:
+            cell = self.queue.get()
             # print(cell.position)
-            # if cell.pre is not None:
-            # print(cell.position)
-            # visited[cell.position] = 1
             if cell.position == (self.maze.dim-1, self.maze.dim-1):
-                # print(self.stack.stack)
+                # print("Find a solution")
                 pre_cell = cell.pre
                 self.path.append((self.maze.dim-1, self.maze.dim-1))
                 while pre_cell is not None:
@@ -77,26 +55,23 @@ class DFS(object):
                     pre_cell = pre_cell.pre
 
                 self.path = self.path[::-1]
+                    # print(node)
                 return True
+
             for neighbor in self.neighbors(cell.position[0], cell.position[1], self.maze.dim):
-                if visited[neighbor] != 1 and self.maze.maze[neighbor] == EMPTY:
-                    # print(neighbor)
-                    visited[neighbor] = 1
+                if visited[neighbor[0], neighbor[1]] != 1 and self.maze.maze[neighbor[0], neighbor[1]] == EMPTY:
+                    visited[neighbor[0], neighbor[1]] = 1
                     next_cell = Cell(position = neighbor, pre = cell)
-                    self.stack.push(next_cell)
-
+                    self.queue.put(next_cell)
+                    # break
         return False
-
-if  __name__ == "__main__":
-    dfs_maze = maze.Maze(dim = 10, p = 0.2)
-    start = time.time()
-    dfs_maze.print_maze()
-    dfs = DFS(dfs_maze)
-    dfs.search()
-    if dfs.path :
-        print("Find a path", dfs.path)
+        
+if __name__ == "__main__":
+    bfs_maze = maze.Maze(dim = 10, p = 0.2)
+    bfs_maze.print_maze()
+    bfs = BFS(bfs_maze)
+    bfs.search()
+    if bfs.path :
+        print("Find a path", bfs.path)
     else:
         print("cannot find a path")
-    end = time.time()
-    print(end - start)
-  
