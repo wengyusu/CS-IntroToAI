@@ -122,6 +122,7 @@ def trace_back(maze):
     return True
 
 
+
 def calculate_path (maze):
     '''
 
@@ -131,6 +132,7 @@ def calculate_path (maze):
 
     path_length=numpy.sum(maze==PATH)
     print("total path length is {}".format(path_length))
+    return path_length
 def print_path(maze):
     '''
 

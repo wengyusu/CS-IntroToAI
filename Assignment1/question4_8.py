@@ -92,9 +92,9 @@ def question8(dim,p):
 
 
 if __name__ == "__main__":
-    # question4_forEuclidean(512,0.2)
+    # question4_forEuclidean(512,0.2)# dim and p
     # question4_forManhattan(512,0.2)
-    #question4_forBiDirection(100, 0.2)
+    # question4_forBiDirection(100, 0.2)
     # compare_time(1024,0.2,0.02)
     question8(256,0.2)
 

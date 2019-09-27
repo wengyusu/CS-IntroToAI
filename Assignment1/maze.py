@@ -32,6 +32,6 @@ class Maze:
             print("You must generate the maze first")
 
 if __name__ == "__main__":
-    maze = Maze(11, 0.2)
+    maze = Maze(11, 0.5)
     maze.print_maze()
     # help(maze)

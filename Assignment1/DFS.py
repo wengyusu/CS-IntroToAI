@@ -5,6 +5,7 @@ import time
 EMPTY = 0
 FILLED = 1
 
+
 class Cell(object):
     def __init__(self, position, pre = None):
         self.position = position
@@ -14,10 +15,10 @@ class Stack(object):
     def __init__(self):
         self.stack = []
 
-    def push(self, value):  
+    def push(self, value):
         self.stack.append(value)
 
-    def pop(self):  
+    def pop(self):
         if self.stack:
             self.stack.pop()
         else:
@@ -26,7 +27,7 @@ class Stack(object):
     def is_empty(self): 
         return not bool(self.stack)
 
-    def top(self): 
+    def top(self):
         return self.stack[-1]
 
 
