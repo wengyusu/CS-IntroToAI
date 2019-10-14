@@ -24,6 +24,8 @@ class Base_Agent(object):
         self.reveal = 0
         self.picked = set()
 
+    
+
     def pick(self):
         if not self.safe or self.safe.issubset(self.picked):
             cell = self.hidden.pop()
@@ -40,8 +42,8 @@ class Base_Agent(object):
     def update_knowledge(self, cell, clues):
         if clues == -1:
             self.map[cell] == MINE
-            self.hidden.remove(cell)
             self.mines.add(cell)
+            self.picked.remove(cell)
         else:
             self.map[cell] = clues # update the cell with the num of indicated mines
             self.safe.add(cell)
@@ -51,13 +53,13 @@ class Base_Agent(object):
                     self.hidden.remove(i)
                     self.mines.add(i)
         #he total number of mines (the clue) minus the number of revealed mines is the number ofhidden neighbors, every hidden neighbor is a mine.
-            print(len(self.safe_neighbors(cell)))
-            print(len(self.hidden_neighbors(cell)))
+            # print(len(self.safe_neighbors(cell)))
+            # print(len(self.hidden_neighbors(cell)))
             if 8 - clues == len(self.safe_neighbors(cell)) + len(self.hidden_neighbors(cell)):
             #the total number of safe neighbors (8 - clue) minus the number of revealed safe neighbors isthe number of hidden neighbors, every hidden neighbor is safe
                 for i in self.hidden_neighbors(cell):
                     self.safe.add(i)
-                    self.hidden.remove(i)
+                    self.hidden.discard(i)
         
     def hidden_neighbors(self, cell):
         res = self.env.neighbors(cell[0], cell[1])
@@ -75,9 +77,15 @@ class Base_Agent(object):
 
     def safe_neighbors(self, cell):
         res = self.env.neighbors(cell[0], cell[1])
+        # print(res)
+        delt = []
         for i in res:
+            # print(i)
+            # print(self.map[i])
             if self.map[i] < 0: # safe cell is larger than 0
-                res.remove(i)
+                delt.append(i)
+        for i in delt:
+            res.remove(i)
         return res
 
     def print_map(self):
@@ -90,6 +98,7 @@ class Base_Agent(object):
 if __name__ == "__main__":
     mine_map = Env.map(10, 10)
     agent = Base_Agent(mine_map)
+    # agent.print_map()
     agent.pick()
     agent.pick()
     agent.print_map()
