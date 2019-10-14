@@ -22,57 +22,84 @@ class Base_Agent(object):
                 self.hidden.add((i, j))
         self.safe = set()
         self.reveal = 0
+        self.miss = 0
         self.picked = set()
 
-    
+    def run(self):
+        while len(self.hidden) >0:
+            self.pick()
+        self.print_map()
 
     def pick(self):
         if not self.safe or self.safe.issubset(self.picked):
+            for neigh in self.picked:
+                self.update_knowledge(neigh, self.env.query(neigh[0], neigh[1]))
+            if not self.hidden:
+                return
+            # self.print_map()
             cell = self.hidden.pop()
+            # print(cell)
+            # print(self.safe)
             self.picked.add(cell)
             clues = self.env.query(cell[0], cell[1])
             self.update_knowledge(cell, clues)
         else:
             cells = self.safe.difference(self.picked)
             cell = cells.pop()
+            self.hidden.discard(cell)
             self.picked.add(cell)
             clues = self.env.query(cell[0], cell[1])
             self.update_knowledge(cell, clues)
 
     def update_knowledge(self, cell, clues):
+        # print(cell, clues)
+        # self.print_map()
         if clues == -1:
-            self.map[cell] == MINE
-            self.mines.add(cell)
+            self.map[cell] = MINE
+            self.mines.add(cell) 
             self.picked.remove(cell)
+            self.miss = self.miss + 1
+            # for neigh in self.safe_neighbors(cell):
+            #     self.update_knowledge(neigh, self.env.query(neigh[0], neigh[1]))
         else:
             self.map[cell] = clues # update the cell with the num of indicated mines
             self.safe.add(cell)
             if clues == len(self.hidden_neighbors(cell)) + len(self.revealed_mines(cell)): 
                 for i in self.hidden_neighbors(cell):
-                    self.map[i] == MINE
-                    self.hidden.remove(i)
+                    self.map[i] = MINE
+                    self.reveal = self.reveal + 1
+                    self.hidden.discard(i)
                     self.mines.add(i)
         #he total number of mines (the clue) minus the number of revealed mines is the number ofhidden neighbors, every hidden neighbor is a mine.
             # print(len(self.safe_neighbors(cell)))
             # print(len(self.hidden_neighbors(cell)))
-            if 8 - clues == len(self.safe_neighbors(cell)) + len(self.hidden_neighbors(cell)):
+            if len(self.env.neighbors(cell[0], cell[1])) - clues == len(self.safe_neighbors(cell)) + len(self.hidden_neighbors(cell)):
             #the total number of safe neighbors (8 - clue) minus the number of revealed safe neighbors isthe number of hidden neighbors, every hidden neighbor is safe
                 for i in self.hidden_neighbors(cell):
                     self.safe.add(i)
                     self.hidden.discard(i)
+
+            # for neigh in self.picked:
+            #     self.update_knowledge(neigh, self.env.query(neigh[0], neigh[1]))
         
     def hidden_neighbors(self, cell):
         res = self.env.neighbors(cell[0], cell[1])
+        delt = []
         for i in res:
             if self.map[i] != HIDDEN:
-                res.remove(i)
+                delt.append(i)
+        for i in delt:
+            res.remove(i)
         return res
 
     def revealed_mines(self, cell):
         res = self.env.neighbors(cell[0], cell[1])
+        delt = []
         for i in res:
             if self.map[i] != MINE:
-                res.remove(i)
+                delt.append(i)
+        for i in delt:
+            res.remove(i)
         return res
 
     def safe_neighbors(self, cell):
@@ -98,11 +125,13 @@ class Base_Agent(object):
 if __name__ == "__main__":
     mine_map = Env.map(10, 10)
     agent = Base_Agent(mine_map)
+    agent.run()
     # agent.print_map()
-    agent.pick()
-    agent.pick()
-    agent.print_map()
+    # agent.pick()
+    # agent.pick()
+    # agent.print_map()
     agent.show_knowledge()
+    print("score: {}".format(agent.reveal/agent.env.mines))
 
 
 
