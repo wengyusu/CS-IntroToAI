@@ -68,6 +68,7 @@ class Base_Agent(object):
             self.mines.add(cell) 
             self.picked.remove(cell)
             self.miss = self.miss + 1
+            print("oops , we encounter bomb!!!!!________________________")
             # for neigh in self.safe_neighbors(cell):
             #     self.update_knowledge(neigh, self.env.query(neigh[0], neigh[1]))
         else:
@@ -87,6 +88,7 @@ class Base_Agent(object):
                 for i in self.hidden_neighbors(cell):
                     self.safe.add(i)
                     self.hidden.discard(i)
+
 
             # for neigh in self.picked:
             #     self.update_knowledge(neigh, self.env.query(neigh[0], neigh[1]))
@@ -131,16 +133,36 @@ class Base_Agent(object):
         print("Safe cells:", self.safe)
         print("Marked mines:", self.mines)
 
+
+def calculate_average(num):
+    sum=0
+    for i in range(num):
+        mine_map = Env.map(10, 40)
+        agent = Base_Agent(mine_map)
+        agent.run()
+        # agent.print_map()
+        # agent.pick()
+        # agent.pick()
+        # agent.print_map()
+        agent.show_knowledge()
+        score=agent.reveal / agent.env.mines
+        sum+=score
+        print("score: {}".format(agent.reveal / agent.env.mines))
+    print("average {}".format(sum/num))
+    return  sum/num
+
 if __name__ == "__main__":
-    mine_map = Env.map(10, 10)
-    agent = Base_Agent(mine_map)
-    agent.run()
-    # agent.print_map()
-    # agent.pick()
-    # agent.pick()
-    # agent.print_map()
-    agent.show_knowledge()
-    print("score: {}".format(agent.reveal/agent.env.mines))
+    # mine_map = Env.map(10, 40)
+    # agent = Base_Agent(mine_map)
+    # agent.run()
+    # # agent.print_map()
+    # # agent.pick()
+    # # agent.pick()
+    # # agent.print_map()
+    # agent.show_knowledge()
+    # print("score: {}".format(agent.reveal/agent.env.mines))
+    calculate_average(20)
+
 
 
 
