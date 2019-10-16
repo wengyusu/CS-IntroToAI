@@ -32,17 +32,26 @@ class Base_Agent(object):
 
     def pick(self):
         if not self.safe or self.safe.issubset(self.picked):
-            for neigh in self.picked:
-                self.update_knowledge(neigh, self.env.query(neigh[0], neigh[1]))
+            for neigh in self.picked: # if not safe cell can be searched, first try to update the knowledge 
+                if self.map[neigh] > 0:
+                    self.update_knowledge(neigh, self.env.query(neigh[0], neigh[1]))
             if not self.hidden:
                 return
             # self.print_map()
-            cell = self.hidden.pop()
-            # print(cell)
-            # print(self.safe)
-            self.picked.add(cell)
-            clues = self.env.query(cell[0], cell[1])
-            self.update_knowledge(cell, clues)
+            if not self.safe or self.safe.issubset(self.picked):
+                cell = self.hidden.pop()
+                # print(cell)
+                # print(self.safe)
+                self.picked.add(cell)
+                clues = self.env.query(cell[0], cell[1])
+                self.update_knowledge(cell, clues)
+            else:
+                cells = self.safe.difference(self.picked)
+                cell = cells.pop()
+                self.hidden.discard(cell)
+                self.picked.add(cell)
+                clues = self.env.query(cell[0], cell[1])
+                self.update_knowledge(cell, clues)
         else:
             cells = self.safe.difference(self.picked)
             cell = cells.pop()
