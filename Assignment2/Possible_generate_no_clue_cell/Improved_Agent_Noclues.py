@@ -1,17 +1,18 @@
-from Base_Agent import Base_Agent
+from Assignment2.Possible_generate_no_clue_cell.Base_Agent_Noclues import Base_Agent
 import numpy
 import random
-import Env
+from Assignment2.Possible_generate_no_clue_cell import Env_Noclues
 import copy
 import heapq
 from itertools import combinations, permutations
 HIDDEN = -2
 MINE = -1
 TEMP_SAFE=100
+NO_CLUE=999
 
 class Improved_Agent(Base_Agent):
 
-    def __init__(self,env: Env.map):
+    def __init__(self,env: Env_Noclues.map):
         Base_Agent.__init__(self,env)
         self.candidate_100safe=set()
         self.candidate_guess_heap=[]
@@ -71,6 +72,9 @@ class Improved_Agent(Base_Agent):
             for pick_element in self.picked:
                 # print(" the pick element we loop is {}".format(pick_element))
                 clue=self.env.query(pick_element[0],pick_element[1])#for each pick get the clue
+                if clue==NO_CLUE:
+                    print("skip because we think there is no clue so we cannot add this cell in potential heap")
+                    continue
                 hidden_neighbors=self.hidden_neighbors(pick_element)
                 revealed_mines=self.revealed_mines(pick_element)
                 safe_neighbors=self.safe_neighbors(pick_element)
@@ -123,7 +127,9 @@ class Improved_Agent(Base_Agent):
     def check_valid(self,cell):#assume a bomb and check existing info
         self.candidate_high_safe_list=[]
         self.candidate_cell=()
-        clue = self.env.query(cell[0], cell[1])  # for each pick get the clue
+        clue = self.env.query(cell[0], cell[1]) # for each pick get the clue
+        if clue==NO_CLUE:
+            clue=self.map(cell)
         hidden_neighbors = self.hidden_neighbors(cell)
         revealed_mines = self.revealed_mines(cell)
         safe_neighbors = self.safe_neighbors(cell)
@@ -161,6 +167,9 @@ class Improved_Agent(Base_Agent):
             for pick in self.picked:
                 # print("we check pick is {}".format(pick))
                 clue = self.env.query(pick[0], pick[1])
+                if clue==NO_CLUE:
+                    print("no clue we skip checking this cell")
+                    continue
                 revealed_mines=self.revealed_mines_for_test(pick,temp_map)
                 hidden_nirghbors=self.hidden_neighbors_for_test(pick,temp_map)
                 safe_neighbors=self.safe_neighbors_for_test(pick,temp_map)
@@ -229,7 +238,7 @@ class Improved_Agent(Base_Agent):
 def calculate_average(num):
     sum=0
     for i in range(num):
-        mine_map = Env.map(10, 40)
+        mine_map = Env_Noclues.map_possible_noclues(10, 40,0.2)
         agent = Improved_Agent(mine_map)
         agent.run()
         # agent.print_map()
