@@ -140,7 +140,7 @@ class Base_Agent(object):
 def calculate_average(num):
     sum=0
     for i in range(num):
-        mine_map = Env_Noclues.map_possible_noclues(10, 40,0.2)
+        mine_map = Env_Noclues.map_possible_noclues(10, 60,0.2)
         agent = Base_Agent(mine_map)
         agent.run()
         # agent.print_map()

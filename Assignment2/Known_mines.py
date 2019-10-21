@@ -14,6 +14,12 @@ class Known_mines(Improved_Agent):
 
 
     def insert_fake_mines_into_map_and_check_valid(self,mines):
+        '''
+        if we make assumption we will consider the number of mines. For each time we make assumption and deduction
+        we will check the feasibility
+        :param mines:
+        :return:
+        '''
         temp_map=copy.deepcopy(self.map)
         for mine in mines :
             temp_map[mine]=MINE
@@ -62,7 +68,7 @@ class Known_mines(Improved_Agent):
 def calculate_average(num):
     sum=0
     for i in range(num):
-        mine_map = Env.map(10, 40)
+        mine_map = Env.map(10, 60)
         agent = Known_mines(mine_map)
         agent.run()
         # agent.print_map()
