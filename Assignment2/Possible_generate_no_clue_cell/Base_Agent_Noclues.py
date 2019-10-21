@@ -1,13 +1,14 @@
 import numpy
 import random
-import Env
+from Assignment2.Possible_generate_no_clue_cell import Env_Noclues
 
 HIDDEN = -2
 MINE = -1
+NO_CLUE=999
 
 class Base_Agent(object):
 
-    def __init__(self, env: Env.map):
+    def __init__(self, env: Env_Noclues.map):
         self.env = env
         self.dim = env.dim
         self.map = numpy.arange(self.dim * self.dim).reshape(self.dim, self.dim)
@@ -29,9 +30,9 @@ class Base_Agent(object):
         while len(self.hidden) >0:
             self.pick()
         print("----------------------------------------------------")
-        print("-1:mine")
+        print("-1:mine" )
         print(">=0:safe cell represent clues")
-
+        print("999: no clue we dig")
 
         print("final map we go is:")
         self.print_map()
@@ -68,6 +69,11 @@ class Base_Agent(object):
             print("oops , we encounter bomb!!!!!________________________")
             # for neigh in self.safe_neighbors(cell):
             #     self.update_knowledge(neigh, self.env.query(neigh[0], neigh[1]))
+        elif clues==NO_CLUE :
+            print("this cell {} dig with no clue-------".format(cell))
+            self.map[cell] = clues
+            self.safe.add(cell)
+
         else:
             self.map[cell] = clues # update the cell with the num of indicated mines
             self.safe.add(cell)
@@ -134,7 +140,7 @@ class Base_Agent(object):
 def calculate_average(num):
     sum=0
     for i in range(num):
-        mine_map = Env.map(10, 40)
+        mine_map = Env_Noclues.map_possible_noclues(10, 40,0.2)
         agent = Base_Agent(mine_map)
         agent.run()
         # agent.print_map()
