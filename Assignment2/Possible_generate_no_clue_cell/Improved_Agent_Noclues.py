@@ -128,8 +128,7 @@ class Improved_Agent(Base_Agent):
         self.candidate_high_safe_list=[]
         self.candidate_cell=()
         clue = self.env.query(cell[0], cell[1]) # for each pick get the clue
-        if clue==NO_CLUE:
-            clue=self.map(cell)
+
         hidden_neighbors = self.hidden_neighbors(cell)
         revealed_mines = self.revealed_mines(cell)
         safe_neighbors = self.safe_neighbors(cell)

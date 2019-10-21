@@ -1,5 +1,6 @@
 from Assignment2.Env import map
 import random
+import numpy
 
 SAFE = 0
 NO_CLUE=999
@@ -16,6 +17,13 @@ class map_possible_noclues(map):
         '''
         map.__init__(self,dim,num)
         self.p=p
+        self.random_map = numpy.arange(self.dim * self.dim).reshape(self.dim, self.dim)
+        for i in range(0, self.dim):
+            for j in range(0, self.dim):
+                if self.is_clue_existed():
+                    self.random_map[i, j] = 1
+                else :
+                    self.random_map[i,j]=0
 
 
 
@@ -24,13 +32,18 @@ class map_possible_noclues(map):
             if self.map[x, y] == MINE:
                 return -1
             clues = 0
-            if not self.is_clue_existed():
-                return NO_CLUE
+
 
             for cell in self.neighbors(x, y):
                 if self.map[cell] == MINE:
                     clues = clues + 1
-            return clues
+            if self.random_map[x,y]==1:
+                return clues
+            elif self.random_map[x,y]==0:
+                print("query no clue return")
+                return NO_CLUE
+
+
         else:
             print("the location is out of bound")
 
@@ -40,6 +53,7 @@ class map_possible_noclues(map):
             return False
         else:
             return True
+
 
 
 if __name__ == "__main__":

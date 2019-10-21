@@ -28,6 +28,12 @@ class Base_Agent(object):
     def run(self):
         while len(self.hidden) >0:
             self.pick()
+        print("----------------------------------------------------")
+        print("-1:mine")
+        print(">=0:safe cell represent clues")
+
+
+        print("final map we go is:")
         self.print_map()
 
     def pick(self):
