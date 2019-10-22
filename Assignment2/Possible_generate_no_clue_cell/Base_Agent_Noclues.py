@@ -1,13 +1,14 @@
 import numpy
 import random
-import Env
+from Assignment2.Possible_generate_no_clue_cell import Env_Noclues
 
 HIDDEN = -2
 MINE = -1
+NO_CLUE=999
 
 class Base_Agent(object):
 
-    def __init__(self, env: Env.map):
+    def __init__(self, env: Env_Noclues.map):
         self.env = env
         self.dim = env.dim
         self.map = numpy.arange(self.dim * self.dim).reshape(self.dim, self.dim)
@@ -29,35 +30,26 @@ class Base_Agent(object):
         while len(self.hidden) >0:
             self.pick()
         print("----------------------------------------------------")
-        print("-1:mine")
+        print("-1:mine" )
         print(">=0:safe cell represent clues")
-
+        print("999: no clue we dig")
 
         print("final map we go is:")
         self.print_map()
 
     def pick(self):
         if not self.safe or self.safe.issubset(self.picked):
-            for neigh in self.picked: # if not safe cell can be searched, first try to update the knowledge 
-                if self.map[neigh] > 0:
-                    self.update_knowledge(neigh, self.env.query(neigh[0], neigh[1]))
+            for neigh in self.picked:
+                self.update_knowledge(neigh, self.env.query(neigh[0], neigh[1]))
             if not self.hidden:
                 return
             # self.print_map()
-            if not self.safe or self.safe.issubset(self.picked):
-                cell = self.hidden.pop()
-                # print(cell)
-                # print(self.safe)
-                self.picked.add(cell)
-                clues = self.env.query(cell[0], cell[1])
-                self.update_knowledge(cell, clues)
-            else:
-                cells = self.safe.difference(self.picked)
-                cell = cells.pop()
-                self.hidden.discard(cell)
-                self.picked.add(cell)
-                clues = self.env.query(cell[0], cell[1])
-                self.update_knowledge(cell, clues)
+            cell = self.hidden.pop()
+            # print(cell)
+            # print(self.safe)
+            self.picked.add(cell)
+            clues = self.env.query(cell[0], cell[1])
+            self.update_knowledge(cell, clues)
         else:
             cells = self.safe.difference(self.picked)
             cell = cells.pop()
@@ -77,6 +69,11 @@ class Base_Agent(object):
             print("oops , we encounter bomb!!!!!________________________")
             # for neigh in self.safe_neighbors(cell):
             #     self.update_knowledge(neigh, self.env.query(neigh[0], neigh[1]))
+        elif clues==NO_CLUE :
+            print("this cell {} dig with no clue-------".format(cell))
+            self.map[cell] = clues
+            self.safe.add(cell)
+
         else:
             self.map[cell] = clues # update the cell with the num of indicated mines
             self.safe.add(cell)
@@ -143,7 +140,7 @@ class Base_Agent(object):
 def calculate_average(num):
     sum=0
     for i in range(num):
-        mine_map = Env.map(10, 60)
+        mine_map = Env_Noclues.map_possible_noclues(10, 60,0.2)
         agent = Base_Agent(mine_map)
         agent.run()
         # agent.print_map()

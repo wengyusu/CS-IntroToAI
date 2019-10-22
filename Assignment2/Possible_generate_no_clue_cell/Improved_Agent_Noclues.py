@@ -1,24 +1,18 @@
-from Base_Agent import Base_Agent
+from Assignment2.Possible_generate_no_clue_cell.Base_Agent_Noclues import Base_Agent
 import numpy
 import random
-import Env
+from Assignment2.Possible_generate_no_clue_cell import Env_Noclues
 import copy
 import heapq
 from itertools import combinations, permutations
 HIDDEN = -2
 MINE = -1
 TEMP_SAFE=100
+NO_CLUE=999
 
 class Improved_Agent(Base_Agent):
-    '''
-    Basically the algorithm we improved is:
-    when there is no more safe move we can do instead of randomly digging one
-    we will found one of the most possible area where we can do logical computation to deduce the truth of the mines
-    logical computation is : we enumerate all cases in certain zone and pick the most reasonable case
-    In the report we will prove the feasibility
-    '''
 
-    def __init__(self,env: Env.map):
+    def __init__(self,env: Env_Noclues.map):
         Base_Agent.__init__(self,env)
         self.candidate_100safe=set()
         self.candidate_guess_heap=[]
@@ -71,12 +65,6 @@ class Improved_Agent(Base_Agent):
             print("after we dig one of the safe cell we got")
             self.print_map()
     def loop_each_picked_element(self):
-        '''
-        if there is no potential cell which is 100%safe of 100% mines
-        We will check all dug cells and put all hidden unknown cells around them into a priority queue
-        And dig one of them which have high probability to be safe
-        :return:
-        '''
         self.candidate_guess_heap = []
         if self.picked:
 
@@ -84,6 +72,9 @@ class Improved_Agent(Base_Agent):
             for pick_element in self.picked:
                 # print(" the pick element we loop is {}".format(pick_element))
                 clue=self.env.query(pick_element[0],pick_element[1])#for each pick get the clue
+                if clue==NO_CLUE:
+                    print("skip because we think there is no clue so we cannot add this cell in potential heap")
+                    continue
                 hidden_neighbors=self.hidden_neighbors(pick_element)
                 revealed_mines=self.revealed_mines(pick_element)
                 safe_neighbors=self.safe_neighbors(pick_element)
@@ -117,19 +108,6 @@ class Improved_Agent(Base_Agent):
         print("------------------------")
 
     def make_assumption(self):
-        '''
-        such as we will make decision among those choice:(several zones we can do deduction to pick possible safe cells)
-        2 mines out of 3 cells
-        1 mines out of 2 cells
-        1 mines out of 3 cells
-        we will choose 2/3 because which have high probability so we can do further computation to check which one is safe
-
-        Ps. if all of choices are 1/8 2/10 etc we will use traditional random pick to dig the cell
-        because the information we have don't have any value and don't deserve to waste time to compute the answer
-        we set threshold 0.2 there
-
-        :return:
-        '''
         # while True:
         self.candidate_cell = ()
         if(self.candidate_guess_heap):
@@ -147,15 +125,10 @@ class Improved_Agent(Base_Agent):
 
 
     def check_valid(self,cell):#assume a bomb and check existing info
-        '''
-
-        :param cell:  once we find one of the most valuable zone whose center cell is the input cell we will make assumpation
-        like we will insert potential cells(loop all combination) around the cell and generate a temporary map which added several fake mines
-        :return:
-        '''
         self.candidate_high_safe_list=[]
         self.candidate_cell=()
-        clue = self.env.query(cell[0], cell[1])  # for each pick get the clue
+        clue = self.env.query(cell[0], cell[1]) # for each pick get the clue
+
         hidden_neighbors = self.hidden_neighbors(cell)
         revealed_mines = self.revealed_mines(cell)
         safe_neighbors = self.safe_neighbors(cell)
@@ -183,12 +156,6 @@ class Improved_Agent(Base_Agent):
         print(self.candidate_cell)
 
     def insert_fake_mines_into_map_and_check_valid(self,mines):
-        '''
-        based on the fake map we will do further computation to check wether whole cells we dug are satisfied the constraint-satisfaction
-        if not we will drop this case
-        :param mines:
-        :return:
-        '''
         temp_map=copy.deepcopy(self.map)
         for mine in mines :
             temp_map[mine]=MINE
@@ -199,6 +166,9 @@ class Improved_Agent(Base_Agent):
             for pick in self.picked:
                 # print("we check pick is {}".format(pick))
                 clue = self.env.query(pick[0], pick[1])
+                if clue==NO_CLUE:
+                    print("no clue we skip checking this cell")
+                    continue
                 revealed_mines=self.revealed_mines_for_test(pick,temp_map)
                 hidden_nirghbors=self.hidden_neighbors_for_test(pick,temp_map)
                 safe_neighbors=self.safe_neighbors_for_test(pick,temp_map)
@@ -265,18 +235,9 @@ class Improved_Agent(Base_Agent):
             res.remove(i)
         return res
 def calculate_average(num):
-    '''
-
-    :param num: have many time we run the complete process of minesweeper and return the average score
-    :return:
-    '''
     sum=0
     for i in range(num):
-<<<<<<< HEAD
-        mine_map = Env.map(10, 40)
-=======
-        mine_map = Env.map(10, 60)
->>>>>>> 4e4c80fe993ff133ec1bfcf66eb1b20e411de58d
+        mine_map = Env_Noclues.map_possible_noclues(10, 60,0.2)
         agent = Improved_Agent(mine_map)
         agent.run()
         # agent.print_map()
