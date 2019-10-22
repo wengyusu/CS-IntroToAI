@@ -229,7 +229,7 @@ class Improved_Agent(Base_Agent):
 def calculate_average(num):
     sum=0
     for i in range(num):
-        mine_map = Env.map(10, 30)
+        mine_map = Env.map(10, 40)
         agent = Improved_Agent(mine_map)
         agent.run()
         # agent.print_map()
