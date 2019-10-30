@@ -1,15 +1,17 @@
-###Question and Writeup
+# Assignment2 Writeup
 
-####Representation: 
+Yusu Weng(yw706) Zhaoxiang Liu(zl355)
+
+## Representation: 
 
 - We use 2D nparray to represent the board
 - First of all we will generate a mine map 1=mine 0=no mine 
-- When we firstly sweep the mine map:
+- When we query the cell, the retrun values are:
   1. Hidden cells=-2
   2. Safe cells >=0  the number represents how many mines around it, also can represent the clue
   3. mines=-1
 
-#### Inference:
+## Inference:
 
 1. when we collect a new clue we will check if exist a 100% safe cell or a 100% danger cell based on 
 
@@ -25,7 +27,7 @@
 
 5. we will loop all of the dug cell to make sure no more cells can be deduced
 
-#### Decisions:
+## Decisions:
 
 We have **3 strategies:**
 
@@ -36,19 +38,15 @@ We have **3 strategies:**
   3. Based on logical deduction, we further implement known-total-mines algorithm. When we make deduction we will drop all cases whose #revealed mines are larger than total mines
 - We will show our detail code snippet to illustrate how they work in detail
 
-#### Performance/Improvements: 
+## Performance/Improvements: 
 
 We know that for minesweeper there are lots of classical cases like picking 1 of 2 or picking 2 of 3
 
-I think our algorithm can handle those cases perfectly:
+Our alogrithm focuses on efficently handle these cases
 
-Here is the illustration:
+### Strategy 2(Logical deduction)
 
-##### 
-
-##### Strategy 2(Logical deduction)
-
-![Screen Shot 2019-10-21 at 3.58.10 PM](/Users/zhaoxiangliu/Desktop/CS-IntroToAI/image/Screen Shot 2019-10-21 at 3.58.10 PM.png)
+![Screen Shot 2019-10-21 at 3.58.10 PM](image/1.png)
 
 Above situation, we need to pick 1 safe cell out of 3 candidates
 
@@ -58,13 +56,13 @@ If more than 3 cases we will illustrate the most possible safe cell to pick
 
 ##### Strategy 3(Total mines):
 
-![Screen Shot 2019-10-21 at 4.07.43 PM](/Users/zhaoxiangliu/Desktop/CS-IntroToAI/image/Screen Shot 2019-10-21 at 4.07.43 PM.png)
+![Screen Shot 2019-10-21 at 4.07.43 PM](image/2.png)
 
 We can see that at the bottom right corner because we only have 1 more mine left and we can deduce that the (8,8) is mine and (8,9) is safe cell
 
 I think our program can handle most of the cases that need extra information like total #mines and logical deduction.
 
-#### Performance/Comparison: 
+## Performance/Comparison: 
 
 We use a 10 by 10 map with mines ranging from 10 to 60
 
@@ -76,7 +74,7 @@ Each algorithm we run for 20 times and plot a scatter plot to compare scores and
 | Logical_deduction                                            | 0.945 | 0.885 | 0.76       | 0.67625 | 0.593 | 0.56916667 |
 | KnowTotalMines                                               | 0.965 | 0.9   | 0.78666667 | 0.6925  | 0.606 | 0.5725     |
 
- ![Screen Shot 2019-10-21 at 4.27.18 PM](/Users/zhaoxiangliu/Desktop/CS-IntroToAI/image/Screen Shot 2019-10-21 at 4.27.18 PM.png)
+ ![Screen Shot 2019-10-21 at 4.27.18 PM](image/3.png)
 
 
 
@@ -86,7 +84,7 @@ When the total number mines increase to 30 we can see that the improved algorith
 
 When the total number mines increase to 60. Minesweeper become ‘hard’. Few clues we can utilize and we can frequently meet the mines. We don‘t have too much information to do deduction and mine clearance rate is maintained at 50%
 
-#### Improvements:
+## Improvements:
 
 We've compared 3 different algorithms above and I think only in the final stage of minesweeper. Additional information about total mines is useful because only when there exists a single-digit mine left. We can easily exclude the bad cases. The left hidden mines can act as a extra clue
 
@@ -112,7 +110,7 @@ We set probability to 0.2, which means we have 20% to get no clue for each safe 
 | Logical_deduction                   | 0.87  | 0.71   | 0.63833333 | 0.5475 | 0.534 | 0.45666667 |
 | KnowTotalMines                      | 0.875 | 0.7575 | 0.65       | 0.635  | 0.547 | 0.48916667 |
 
- ![Screen Shot 2019-10-21 at 5.14.08 PM](/Users/zhaoxiangliu/Desktop/CS-IntroToAI/image/Screen Shot 2019-10-21 at 5.14.08 PM.png)
+ ![Screen Shot 2019-10-21 at 5.14.08 PM](image/4.png)
 
  All scores have dropped a lot because 3 strategies all rely on collecting information to complete the next step. But improved algorithm still perform better because thay alway extract extra information compared with baseline algorithm.When there are few mines 3 algorithms don't reduce their efficiency significantly beacaue the board can still provide enough information for us. But with the number of mines increase, we can easily observe a significant drop down. 
 
