@@ -1,6 +1,6 @@
 import numpy as np
 import random
-from Assignment3.Env import Map
+from Env import Map
 import math
 
 FLAT = 1
@@ -64,9 +64,9 @@ class Agent:
         result = np.where(self.belief == np.amax(self.belief))
         listOfCoordinates = list(zip(result[0], result[1]))
 
-        print("based on rule 1 the list have high possibility is ",listOfCoordinates)
-        print(self.mapObject.map)
-        print(self.belief)
+        # print("based on rule 1 the list have high possibility is ",listOfCoordinates)
+        # print(self.mapObject.map)
+        # print(self.belief)
         # for cord in listOfCordinates:
         #         #     print(cord)
         maxIndex = random.sample(listOfCoordinates, 1)[0]
@@ -96,20 +96,8 @@ class Agent:
 
 
     def responseToPicked(self, cell):
-        print("we pick ",cell)
-        terrainType = self.mapObject.getTerrainType(cell)
-        if cell == self.mapObject.target:
-            if random.random() < self.targetNotFoundInCell_TargetIsInCell(terrainType):
-                print("this round we choose the right cell but don't found it")
-                # print("the terrain type is ", terrainType)
-                # print("Failure")
-                return False
-            else:
-                # print("Success")
-                return True
-        # print("Failure")
-        return False
-
+        # print("we pick ",cell)
+        return self.mapObject.query(cell)
 
     def targetNotFoundInCell_TargetIsInCell(self, terrainType):
 
@@ -140,22 +128,22 @@ class Agent:
 def testTwoRule():
     print("runing rule 1....")
     countTimes1=0
-    for i in range(20):
-        map = Map(20)
+    for i in range(500):
+        map = Map(50)
         agent = Agent(map)
         agent.run_rule1()
         countTimes1+=agent.countTimes
 
     countTimes2 = 0
-    for i in range(20):
-        map = Map(20)
+    for i in range(500):
+        map = Map(50)
         agent = Agent(map)
         agent.run_rule2()
         countTimes2+=agent.countTimes
     print("runing rule 1....")
-    print("average search time is ", countTimes1 / 20)
+    print("average search time is ", countTimes1 / 500)
     print("runing rule 2....")
-    print("average search time is ", countTimes2 / 20)
+    print("average search time is ", countTimes2 / 500)
 
 
 def testOfNp():
@@ -178,11 +166,11 @@ def testOfNp():
 
 
 if __name__ == "__main__":
-    map=Map(3)
-    agent=Agent(map)
-    agent.run_rule2()
+    # map=Map(50)
+    # agent=Agent(map)
+    # agent.run_rule2()
 
-    # testTwoRule()
+    testTwoRule()
 
     # testOfNp()
 

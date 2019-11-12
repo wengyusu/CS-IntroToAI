@@ -6,11 +6,8 @@ HILLY = 2
 FORESTED = 3
 CAVES = 4
 class Map:
-
-
-
     def __init__(self,dim):
-
+        self.negativeRate = {FLAT: 0.1, HILLY: 0.3, FORESTED: 0.7, CAVES: 0.9}
         self.dim=dim
         self.map=np.zeros((self.dim,self.dim))
         self.target =(random.randint(0,dim-1),random.randint(0,dim-1))
@@ -19,12 +16,18 @@ class Map:
                 currentCell=(i,j)
                 self.map[currentCell]=self.generateType()
 
-
-
-
-
-
-
+    def query(self, cell):
+        if cell == self.target:
+            if random.random() < self.negativeRate[self.map[self.target]]:
+                print("this round we choose the right cell but don't found it")
+                # print("the terrain type is ", terrainType)
+                # print("Failure")
+                return False
+            else:
+                # print("Success")
+                return True
+        # print("Failure")
+        return False
 
     def getTerrainType(self,cell):
 
