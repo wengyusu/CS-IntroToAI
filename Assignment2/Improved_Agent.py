@@ -275,7 +275,7 @@ def calculate_average(num):
 
 
 
-        mine_map = Env.map(10, 60)
+        mine_map = Env.map(10, 10)
 
         agent = Improved_Agent(mine_map)
         agent.run()
