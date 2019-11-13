@@ -166,11 +166,11 @@ def testOfNp():
 
 
 if __name__ == "__main__":
-    # map=Map(50)
-    # agent=Agent(map)
-    # agent.run_rule2()
+    map=Map(10)
+    agent=Agent(map)
+    agent.run_rule1()
 
-    testTwoRule()
+    # testTwoRule()
 
     # testOfNp()
 
