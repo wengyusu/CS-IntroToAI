@@ -5,7 +5,7 @@ import random
 class MotionAgent(Agent):
     '''
     we calculate total  motion  to evaluate the efficiency of the algorithm
-    motion= search time + move_distance/5
+    motion= search time + move_distance/10
     once we update belief of all cell based on possibility of finding or containing cell we will add corresponding weight and provide an optimal one to dig
     '''
     def __init__(self,Map):
@@ -29,12 +29,12 @@ class MotionAgent(Agent):
                 flag = False
                 print("total times cost is {}".format(self.countTimes))
                 print("total distance is " ,self.totalDistance)
-                self.totalMotion=self.countTimes+self.totalDistance//5
+                self.totalMotion=self.countTimes+self.totalDistance
                 print("totalMotion is ", self.totalMotion)
                 print("terminate the iteration because we find the target {}".format(pickedCell))
 
             else:
-                self.updwateBelief(pickedCell, False)
+                self.updateBelief(pickedCell, False)
     def run_rule1_motionWithDistanceWeight(self):
         print("based on rule 1")
         flag = True
@@ -49,7 +49,7 @@ class MotionAgent(Agent):
                 flag = False
                 print("total times cost is {}".format(self.countTimes))
                 print("total distance is " ,self.totalDistance)
-                self.totalMotion=self.countTimes+self.totalDistance//5
+                self.totalMotion=self.countTimes+self.totalDistance
                 print("totalMotion is ", self.totalMotion)
                 print("terminate the iteration because we find the target {}".format(pickedCell))
 
@@ -70,7 +70,7 @@ class MotionAgent(Agent):
 
                 print("total times cost is {}".format(self.countTimes))
                 print("total distance is ", self.totalDistance)
-                self.totalMotion = self.countTimes + self.totalDistance // 5
+                self.totalMotion = self.countTimes + self.totalDistance
                 print("totalMotion is ", self.totalMotion)
                 print("terminate the iteration because we find the target {}".format(pickedCell))
 
@@ -90,7 +90,7 @@ class MotionAgent(Agent):
 
                 print("total times cost is {}".format(self.countTimes))
                 print("total distance is ", self.totalDistance)
-                self.totalMotion = self.countTimes + self.totalDistance // 5
+                self.totalMotion = self.countTimes + self.totalDistance
                 print("totalMotion is ", self.totalMotion)
                 print("terminate the iteration because we find the target {}".format(pickedCell))
 
@@ -105,12 +105,12 @@ class MotionAgent(Agent):
                 updateCell = (i, j)
 
                 distance = self.calculateDistance(updateCell)
-                weight = distance // 5 + 1
+                weight = distance // 10 + 1
                 distanceWeightedPossibility[updateCell] = 1 - pow((1 - self.belief[updateCell]), 1 / weight)
 
 
 
-        result = np.where(self.belief == np.amax(self.belief))
+        result = np.where(distanceWeightedPossibility == np.amax(distanceWeightedPossibility))
         listOfCoordinates = list(zip(result[0], result[1]))
 
         # print("based on rule 1 the list have high possibility is ",listOfCoordinates)
@@ -134,7 +134,7 @@ class MotionAgent(Agent):
 
                 findPossibility[updateCell]=self.belief[updateCell]*found_targetIn
                 distance=self.calculateDistance(updateCell)
-                weight=distance//5+1
+                weight=distance//10+1
                 distanceWeightedPossibility[updateCell]=1-pow((1-findPossibility[updateCell]),1/weight)
         result = np.where(distanceWeightedPossibility == np.amax(distanceWeightedPossibility))
         listOfCoordinates = list(zip(result[0], result[1]))
@@ -162,12 +162,51 @@ class MotionAgent(Agent):
             distance = abs(cell[0] - self.currentCell[0]) + abs(cell[1] - self.currentCell[1])
             return  distance
 
-
+def testTwoRuleWithoutAddDistanceWeight():
+    print("runing rule 1....")
+    totalMotion1=0
+    for i in range(10):
+        map = Map(50)
+        agent = MotionAgent(map)
+        agent.run_rule1_motion()
+        totalMotion1+=agent.totalMotion
+    print("runing rule 2....")
+    totalMotion2=0
+    for i in range(10):
+        map = Map(50)
+        agent = MotionAgent(map)
+        agent.run_rule2_motion()
+        totalMotion2 += agent.totalMotion
+    print("runing rule 1 with dim 50 and for 10 times ..")
+    print("average search action is ", totalMotion1 / 10)
+    print("runing rule 2 with dim 50 and for 10 times ..")
+    print("average search action is ", totalMotion2 / 10)
+def testTwoRuleWithAddDistanceWeight():
+    print("runing rule 1....")
+    totalMotion1=0
+    for i in range(10):
+        map = Map(50)
+        agent = MotionAgent(map)
+        agent.run_rule1_motionWithDistanceWeight()
+        totalMotion1+=agent.totalMotion
+    print("runing rule 2....")
+    totalMotion2=0
+    for i in range(10):
+        map = Map(50)
+        agent = MotionAgent(map)
+        agent.run_rule2_motionWithDistanceWeight()
+        totalMotion2 += agent.totalMotion
+    print("runing rule 1 with dim 50 and for 10 times ..")
+    print("average search action is ", totalMotion1 / 10)
+    print("runing rule 2 with dim 50 and for 10 times ..")
+    print("average search action is ", totalMotion2 / 10)
 
 
 
 
 if __name__=="__main__":
-    map = Map(10)
-    agent = MotionAgent(map)
-    agent.run_rule2_motionWithDistanceWeight()
+    # map = Map(10)
+    # agent = MotionAgent(map)
+    # agent.run_rule2_motionWithDistanceWeight()
+    # testTwoRuleWithoutAddDistanceWeight()
+    testTwoRuleWithAddDistanceWeight()

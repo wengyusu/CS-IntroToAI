@@ -88,7 +88,7 @@ class Agent:
 
         print("based on rule 2 the list have high possibility is ", listOfCoordinates)
         print(self.mapObject.map)
-        print(findPossibility)
+        # print(findPossibility)
         maxIndex = random.sample(listOfCoordinates, 1)[0]
         return maxIndex  ##tuple
 
