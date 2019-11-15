@@ -273,13 +273,7 @@ def calculate_average(num):
     sum=0
     for i in range(num):
 
-
-
-
-
-
         mine_map = Env.map(10, 60)
-
         agent = Improved_Agent(mine_map)
         agent.run()
         # agent.print_map()
@@ -303,4 +297,4 @@ if __name__ == "__main__":
     # # agent.print_map()
     # agent.show_knowledge()
     # print("score: {}".format(agent.reveal/agent.env.mines))
-    calculate_average(20)
+    calculate_average(20)   #10*10 with 60 mines
