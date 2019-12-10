@@ -109,7 +109,7 @@ flatten_image = tf.keras.layers.Flatten()( max_poo2 )
     ## This flattens the block from the CNN layer to a flat vector 
 fc1 = tf.keras.layers.Dense(units = 2048, activation=tf.nn.relu, use_bias=True, kernel_initializer = tf.keras.initializers.TruncatedNormal(mean=0.0, stddev=0.1, seed=None), bias_initializer = tf.keras.initializers.Constant(value=0.1) )(flatten_image)
 fc2 = tf.keras.layers.Dense(units = 4096, activation=tf.nn.relu, use_bias=True, kernel_initializer = tf.keras.initializers.TruncatedNormal(mean=0.0, stddev=0.1, seed=None), bias_initializer = tf.keras.initializers.Constant(value=0.1) )(fc1)
-dropout_1 = tf.keras.layers.Dropout( rate = 0.0 )( fc2 )
+dropout_1 = tf.keras.layers.Dropout( rate = 0.5 )( fc2 )
 fc3 = tf.keras.layers.Dense( units = size[0]*size[1]*2, activation = None )(dropout_1 )
 a_b_channels = tf.keras.layers.Reshape((size[0], size[1], 2))(fc3)
 
@@ -117,7 +117,7 @@ a_b_channels = tf.keras.layers.Reshape((size[0], size[1], 2))(fc3)
 model = tf.keras.Model( inputs = digit_input, outputs = a_b_channels )
 model.compile( optimizer = "adam", loss = 'mean_squared_error', metrics = ['mean_squared_error'] )
 
-history = model.fit( train_in, train_out, batch_size=3, epochs = 200 )
+history = model.fit( train_in, train_out, batch_size=3, epochs = 100 )
 prediction = model.predict( test_in ) * 255
 print(prediction.shape)
 
