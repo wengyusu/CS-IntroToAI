@@ -8,4 +8,5 @@ Assignment4/venv/
 .vscode/settings.json
 Assignment4/train/
 Assignment4/test/
+Assignment4/test1.h5
 Assignment4/*.h5
