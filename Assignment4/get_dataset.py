@@ -33,15 +33,15 @@ for i in lists.text.split('\n'):
     try:
         img = requests.get(i).content
         if imghdr.what(None, img) in ["jpeg", "png"]:
-            if count >= 1100 and count < 1500:
+            if count >= 0 and count < 10000:
                 with open(train_path+"/"+str(count)+".jpg", "wb") as f:
                     f.write(img)
 
-            if count < 1100 and count >=1000:
+            if count < 11000 and count >=10000:
                 with open(test_path+"/"+str(count)+".jpg", "wb") as f:
                     f.write(img)
 
-            if count >=1100:
+            if count >=11000:
                 break
 
     except Exception as e:

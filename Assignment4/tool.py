@@ -7,6 +7,7 @@ import random
 from skimage.io import imread
 from skimage import color
 from skimage.transform import resize
+from tensorflow.keras import backend as K
 
 def load_and_resize(path, size):
     resized_pics=[]
@@ -71,3 +72,8 @@ def lab_channel_to_rgb(channel_l, channel_ab, size):
     pred_lab_pixs.append(pred_lab_pix)
     pred_rgb_pix = lab_to_rgb(pred_lab_pixs, size)
     return pred_rgb_pix[0]
+
+def accuracy(y_true, y_pred):
+    acc = K.sum(K.clip(10/255-K.abs(y_true-y_pred), 0, 1))
+    ele = K.sum(K.clip(K.abs(y_true-y_pred)-10/255, 0, 1))
+    return acc /(acc+ele)

@@ -21,9 +21,9 @@ x_test = lab_pixs_1[:, :, :, 0]
 y_test = np.add(lab_pixs_1[:, :, :, 1:], 128)
 index = np.random.randint(len(x_test))
 test_in = np.reshape( x_test, (-1, size[0], size[1], 1) ) /100 
-model = tf.keras.models.load_model('test1.h5')
-# history = model.fit( train_in, train_out, batch_size=3, epochs = 50, validation_data = (test_in, test_out) )
-# model.save("test3.h5")
+model = tf.keras.models.load_model('test3.h5')
+history = model.fit( train_in, train_out, batch_size=3, epochs = 50, validation_data = (test_in, test_out) )
+model.save("test3.h5")
 prediction = model.predict( test_in ) * 255
 
 print('Grayscale:')
