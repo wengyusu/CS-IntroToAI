@@ -60,7 +60,7 @@ flatten_image = tf.keras.layers.Flatten()( max_poo3 )
     ## This flattens the block from the CNN layer to a flat vector 
 # fc1 = tf.keras.layers.Dense(units = 4096, activation=tf.nn.relu)(flatten_image)
 fc1 = tf.keras.layers.Dense(units = 2048, activation=tf.nn.relu, kernel_regularizer=tf.keras.regularizers.l2(0.001) )(flatten_image)
-fc2 = tf.keras.layers.Dense(units = 4096, activation=tf.nn.relu, kernel_regularizer=tf.keras.regularizers.l2(0.001) )(fc1)
+fc2 = tf.keras.layers.Dense(units = 2048, activation=tf.nn.relu, kernel_regularizer=tf.keras.regularizers.l2(0.001) )(fc1)
 dropout_1 = tf.keras.layers.Dropout( rate = 0.2 )( fc2 )
 fc3 = tf.keras.layers.Dense( units = size[0]*size[1]*2, activation = None )(dropout_1)
 
@@ -70,8 +70,8 @@ a_b_channels = tf.keras.layers.Reshape((size[0], size[1], 2))(fc3)
 model = tf.keras.Model( inputs = digit_input, outputs = a_b_channels )
 model.compile( optimizer = "adam", loss = 'mean_squared_error', metrics = [accuracy] )
 
-history = model.fit( train_in, train_out, batch_size=10, epochs = 200, validation_data = (test_in, test_out) )
-model.save("test3.h5")
+history = model.fit( train_in, train_out, batch_size=10, epochs = 100, validation_data = (test_in, test_out) )
+model.save("test5.h5")
 prediction = model.predict( test_in ) * 255
 print(prediction.shape)
 

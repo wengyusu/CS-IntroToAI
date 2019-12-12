@@ -2,7 +2,52 @@
 Yusu Weng(yw706) Zhaoxiang Liu(zl355)
 
 ## CNN-Regression Approach
+### Model Structure
+Input Layer
 
+$\Downarrow$
+
+Convolutional Layer
+
+$\Downarrow$
+
+Convolutional Layer
+
+$\Downarrow$
+
+MaxPooling Layer
+
+$\Downarrow$
+
+Convolutional Layer
+
+$\Downarrow$
+
+Convolutional Layer
+
+$\Downarrow$
+
+MaxPooling Layer
+
+$\Downarrow$
+
+Flatten Layer
+
+$\Downarrow$
+
+FullConnected Layer
+
+$\Downarrow$
+
+FullConnected Layer
+
+$\Downarrow$
+
+Dropout Layer
+
+$\Downarrow$
+
+Output Layer
 ### Representing the process
 To better solve the problem, we first convert RGB color space to CIELAB(LAB) color space. The LAB space consists of three channels: L for lightness, A for green-red, B for blue-yellow. The value of L ranges from 0 to 100, while other two channel range from -128 to 127. Since the grayscale image only has L channel, we can represent the process as mapping the L channel as input to the A&B channels as the output. At last, we convert the predicted LAB space back to the RGB space.
 
