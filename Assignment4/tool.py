@@ -74,6 +74,10 @@ def lab_channel_to_rgb(channel_l, channel_ab, size):
     return pred_rgb_pix[0]
 
 def accuracy(y_true, y_pred):
-    acc = K.sum(K.clip(10/255-K.abs(y_true-y_pred), 0, 1))
-    ele = K.sum(K.clip(K.abs(y_true-y_pred)-10/255, 0, 1))
-    return acc /(acc+ele)
+    acc = K.mean(K.greater(10/255-K.abs(y_true-y_pred), 0))
+    # acc = K.mean(K.clip(10/255-K.abs(y_true-y_pred), 0, 1))
+    # ele = K.sum(K.clip(K.abs(y_true-y_pred)-10/255, 0, 1))
+    return acc 
+
+def loss(y_true, y_pred):
+    return K.mean(K.less(10/255-K.abs(y_true-y_pred), 0))
