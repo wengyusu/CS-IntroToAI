@@ -86,8 +86,8 @@ class Agent:
         result = np.where(findPossibility == np.amax(findPossibility))
         listOfCoordinates = list(zip(result[0], result[1]))
 
-        # print("based on rule 2 the list have high possibility is ", listOfCoordinates)
-        # print(self.mapObject.map)
+        print("based on rule 2 the list have high possibility is ", listOfCoordinates)
+        print(self.mapObject.map)
         # print(findPossibility)
         maxIndex = random.sample(listOfCoordinates, 1)[0]
         return maxIndex  ##tuple
@@ -166,11 +166,11 @@ def testOfNp():
 
 
 if __name__ == "__main__":
-    # map=Map(50)
-    # agent=Agent(map)
-    # agent.run_rule2()
+    map=Map(10)
+    agent=Agent(map)
+    agent.run_rule1()
 
-    testTwoRule()
+    # testTwoRule()
 
     # testOfNp()
 

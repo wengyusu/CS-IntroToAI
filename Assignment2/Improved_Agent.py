@@ -297,4 +297,4 @@ if __name__ == "__main__":
     # # agent.print_map()
     # agent.show_knowledge()
     # print("score: {}".format(agent.reveal/agent.env.mines))
-    calculate_average(20)
+    calculate_average(20)   #10*10 with 60 mines

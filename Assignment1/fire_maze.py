@@ -463,7 +463,7 @@ def main(p):
         Negative0 = 0
         Postive1 = 0
         Negative1 = 0
-        for i in range(1000):
+        for i in range(10):
             f_maze = Fire_maze(32, p, q)
             res0 = test_improved_rate(f_maze)
             if  res0 == 1:
