@@ -97,6 +97,7 @@ Our model can reach a 68% accuracy on coloring images with category of seashore.
 `Example1`
 
 Real
+
 ![Real](./demo/1.png)
 
 Prediction
@@ -106,6 +107,7 @@ Prediction
 `Example2`
 
 Real
+
 ![Real](./demo/3.png)
 
 Prediction
@@ -115,6 +117,7 @@ Prediction
 `Example3`
 
 Real
+
 ![Real](demo/5.png)
 
 Prediction
@@ -139,7 +142,9 @@ Second, the margin between sea, sky and beach is vague and the model tend to use
 Finally, the model may confuse the sea with beach if the coastline is irregular.
 
 Besides, the model cannot handle the images that are not seashore at all as was expected. The model will try to use blue and yellow which are colors of sea and sands to colorize the image.
+
 ![](demo/9.png)
+
 ![](demo/10.png)
 ### Rethinking & Improvement
 
