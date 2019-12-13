@@ -1,9 +1,9 @@
-from Assignment1 import A_Manhattan_Class as a_manhattam
+import A_Manhattan_Class as a_manhattam
 import maze as mazepkg
 import numpy
 import copy
 import random
-from Assignment1 import DFS_Class
+import DFS_Class
 EMPTY = 0
 FILLED = 1
 

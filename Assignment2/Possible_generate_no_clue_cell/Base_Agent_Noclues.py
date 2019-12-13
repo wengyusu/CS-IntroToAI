@@ -1,6 +1,6 @@
 import numpy
 import random
-from Assignment2.Possible_generate_no_clue_cell import Env_Noclues
+import Env_Noclues
 
 HIDDEN = -2
 MINE = -1
@@ -164,7 +164,7 @@ if __name__ == "__main__":
     # # agent.print_map()
     # agent.show_knowledge()
     # print("score: {}".format(agent.reveal/agent.env.mines))
-    calculate_average(20)
+    calculate_average(20)#10*10 with 60 mines and 0.2 return no clue
 
 
 

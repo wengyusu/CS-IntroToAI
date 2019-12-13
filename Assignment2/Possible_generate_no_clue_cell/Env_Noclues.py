@@ -1,4 +1,4 @@
-from Assignment2.Env import map
+from Env import map
 import random
 import numpy
 
